@@ -20,18 +20,40 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(dismissKeyboard)];
+    
+    [self.view addGestureRecognizer:tap];
+    
     self.nameTextField.text = self.player.playerName;
     self.mentorTextField.text = self.player.mentor;
+}
+#pragma mark - Text editing methods. Resigning textField, Clear Button, Dismiss Keyboard
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (IBAction)clearButtonPressed:(id)sender {
+    self.nameTextField.text = @"";
+    self.mentorTextField.text =@"";
+}
+
+-(void)dismissKeyboard {
+    [self.nameTextField resignFirstResponder];
+    [self.mentorTextField resignFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (IBAction)clearButtonPressed:(id)sender {
-    self.nameTextField.text = @"";
-    self.mentorTextField.text =@"";
-}
+
+#pragma mark - Delete and Save Button Actions
+
 - (IBAction)deleteButtonPressed:(id)sender {
     [[PlayerController sharedInstance]removePlayer:self.player];
     [[PlayerController sharedInstance]save];
@@ -54,8 +76,6 @@
         
         
         self.player = player;
-//        //adds the player that was just created to the sharedInstance.
-//        [[PlayerController sharedInstance]save];
     }
     //saves the entry to the persistent storage
     [[PlayerController sharedInstance]save];

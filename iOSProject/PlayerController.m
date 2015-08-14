@@ -60,7 +60,7 @@ static NSString *allPlayersKey = @"allPlayers";
     [player.managedObjectContext deleteObject:player];
 }
 
-#pragma mark -save
+#pragma mark - Save
 - (void)save
 {
     NSError *error;
@@ -72,6 +72,7 @@ static NSString *allPlayersKey = @"allPlayers";
     }
 }
 
+#pragma mark - Randomize
 - (NSArray *)randomizeMethod:(NSArray *)array {
     
     NSMutableArray *returnArray = [array mutableCopy];

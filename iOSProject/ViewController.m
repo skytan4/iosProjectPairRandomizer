@@ -12,12 +12,14 @@
 #import "Stack.h"
 @import UIKit;
 
+//static string for tableview reuse identifier
 static NSString *cellID = @"cellID";
 
 @interface ViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @property (strong, nonatomic) NSArray *playersArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIView *emptyTableView;
 
 @end
 
@@ -31,6 +33,12 @@ static NSString *cellID = @"cellID";
 
 -(void)viewWillAppear:(BOOL)animated{
     self.playersArray = [PlayerController sharedInstance].players;
+    if (self.playersArray.count != 0) {
+        self.emptyTableView.hidden = YES;
+    } else {
+        self.emptyTableView.hidden = NO;
+    }
+    
     [self.tableView reloadData];
 }
 
@@ -39,6 +47,7 @@ static NSString *cellID = @"cellID";
     // Dispose of any resources that can be recreated.
     
 }
+#pragma mark - Randomize Button Pressed Method
 
 - (IBAction)randomizeButtonPushed:(id)sender {
     PlayerController *playerController = [PlayerController new];
@@ -47,6 +56,7 @@ static NSString *cellID = @"cellID";
     
     [self.tableView reloadData];
 }
+
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -58,16 +68,17 @@ static NSString *cellID = @"cellID";
         //specifies an instance of the view we are segueing to.
         DetailViewController *detailViewController = segue.destinationViewController;
         
-        //creates a new entry and sets it to the sharedInstance classes --> entries array --> index where the user clicked on this tableView.
+        //creates a new player and sets it to the sharedInstance classes --> players array --> index where the user clicked on this tableView.
         Player *player = [PlayerController sharedInstance].players[index];
         
-        //sets the detailViewController instances entry = to the entry that was selected.
+        //sets the detailViewController instances player = to the player that was selected.
         detailViewController.player = player;
         
     }
 
 }
 
+#pragma mark - Internal Datasource Methods
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     if ([PlayerController sharedInstance].players.count == 1) {
         return 1;
@@ -98,12 +109,12 @@ static NSString *cellID = @"cellID";
 }
 
 
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     NSString *title = [NSString stringWithFormat:@"Pair %ld", section+1];
+    
     return title;
 }
-
 
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
